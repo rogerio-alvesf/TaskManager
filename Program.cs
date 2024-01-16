@@ -1,27 +1,47 @@
-using TaskManager.Core.V1.Interfaces.Repository;
-using TaskManager.Core.V1.Interfaces.Service;
-using TaskManager.Core.V1.Repositories;
-using TaskManager.Core.V1.Services;
+using TaskManager.Core.Interfaces.Repository;
+using TaskManager.Core.Interfaces.Service;
+using TaskManager.Core.Repositories;
+using TaskManager.Core.Services;
+using Newtonsoft.Json;
+using TaskManager.Infrastructure.JsonConverterResolver;
+using TaskManager.Config;
+using TaskManager.Infrastructure.Middlewares;
+using TaskManager.Infrastructure.ResultHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Adiciona serviços ao contêiner.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// Saiba mais sobre a configuração do Swagger/OpenAPI em https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Registra outros serviços.
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<IDatabase, Database>();
+builder.Services.AddScoped<IResultHandler, ResultHandler>();
+
+builder.Services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ContractResolver = new LowerCaseCoverterResolver();
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    // options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configura o pipeline de solicitações HTTP.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseErrorMiddleware();
 
 app.UseHttpsRedirection();
 
