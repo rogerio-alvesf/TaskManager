@@ -8,11 +8,11 @@ public class RequestError
         Errors = new List<ErrorDetails>();
     }
 
-    public RequestError(string logref, string message)
+    public RequestError(string logref, string detail)
     {
         TraceId = Guid.NewGuid().ToString();
         Errors = new List<ErrorDetails>();
-        AddError(logref, message);
+        AddError(logref, detail);
     }
 
     public string TraceId { get; set; }
@@ -20,18 +20,18 @@ public class RequestError
 
     public class ErrorDetails
     {
-        public ErrorDetails(string logref, string message)
+        public ErrorDetails(string logref, string detail)
         {
             TraceId = logref;
-            Message = message;    
+            Detail = detail;    
         }
 
-        public string Message { get; set; }
+        public string Detail { get; set; }
         public string TraceId { get; set; } 
     }
 
-    public void AddError(string logref, string message)
+    public void AddError(string logref, string detail)
     {
-        Errors.Add(new ErrorDetails(logref, message));
+        Errors.Add(new ErrorDetails(logref, detail));
     }
 }

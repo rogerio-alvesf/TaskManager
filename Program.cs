@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using TaskManager.Infrastructure.JsonConverterResolver;
 using TaskManager.Config;
 using TaskManager.Infrastructure.Middlewares;
-using TaskManager.Infrastructure.ResultHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +20,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IDatabase, Database>();
-builder.Services.AddScoped<IResultHandler, ResultHandler>();
 
 builder.Services.AddControllers()
                 .AddNewtonsoftJson(options =>

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using TaskManager.Core.Interfaces.Service;
 using TaskManager.Core.Models.Input;
 using TaskManager.Core.Models.Output;
-using TaskManager.Infrastructure.ResultHandler;
 
 namespace TaskManager.Controllers;
 
@@ -13,18 +12,16 @@ namespace TaskManager.Controllers;
 public class TaskController : ControllerBase
 {
     private readonly ITaskService _taskService;
-    private readonly IResultHandler _resultHandler;
 
     public TaskController(
-        ITaskService taskService,
-        IResultHandler resultHandler
+        ITaskService taskService
     )
     {
         _taskService = taskService;
-        _resultHandler = resultHandler;
     }
 
     [HttpPost]
+    [ProducesResponseType(200)]
     public IActionResult Add([FromBody] InAddTask input)
     {
         _taskService.AddTask(input);
@@ -35,8 +32,8 @@ public class TaskController : ControllerBase
     [ProducesResponseType(typeof(IEnumerable<OutTask>), 200)]
     public async Task<IActionResult> ConsultAllTasks()
     {
-        var result = await _taskService.ConsultAllTasks();
-        return Ok(result);
+        var tasks = await _taskService.ConsultAllTasks();
+        return Ok(tasks);
     }
 
     [HttpGet]
@@ -44,10 +41,24 @@ public class TaskController : ControllerBase
     public async Task<IActionResult> ConsultTaskById([FromQuery] int id_task)
     {
         var task = await _taskService.ConsultTaskById(id_task);
-
-        if (task == null)
-            throw new NotFoundException("Unable to find task");
-
         return Ok(task);
+    }
+
+    [HttpDelete]
+    [ProducesResponseType(200)]
+    public async Task<IActionResult> DeleteTaskById([FromQuery] int id_task)
+    {
+        await _taskService.DeleteTaskById(id_task);
+
+        return Ok();
+    }
+
+    [HttpPatch]
+    [ProducesResponseType(200)]
+    public async Task<IActionResult> UpdateTaskById([FromQuery] int id_task, [FromBody] InUpdateTask input)
+    {
+        await _taskService.UpdateTaskById(id_task, input);
+
+        return Ok();
     }
 }
