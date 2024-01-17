@@ -16,11 +16,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Registra outros serviços.
-builder.Services.AddScoped<ITaskRepository, TaskRepository>();
-builder.Services.AddScoped<ITaskService, TaskService>();
-builder.Services.AddScoped<IDatabase, Database>();
-
 builder.Services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 {

@@ -37,12 +37,14 @@ namespace TaskManager.Core.Repositories
             using var connection = _dataBase.GetConnection();
 
             var result = await connection.QueryAsync<OutTask>(
-               sql: @"SELECT ID_Task
-                            ,Description_Task
-                            ,DT_Created
-                            ,NM_User_Inclusion
-                            ,DT_Change
-                       FROM dbo.Task",
+               sql: @"SELECT ID_Task           = Task.ID_Task
+                            ,Description_Task  = Task.Description_Task
+                            ,DT_Created        = Task.DT_Created
+                            ,NM_User_Inclusion = User_System.NM_User
+                            ,DT_Change         = Task.DT_Change
+                       FROM dbo.Task WITH (NOLOCK)
+                       INNER JOIN dbo.User_System WITH (NOLOCK)
+                       ON User_System.ID_User = Task.ID_User",
                commandType: CommandType.Text
            );
 
@@ -57,12 +59,14 @@ namespace TaskManager.Core.Repositories
             parameters.Add("@ID_Task", id_task);
 
             var result = await connection.QueryFirstOrDefaultAsync<OutTask>(
-               sql: @"SELECT ID_Task
-                            ,Description_Task
-                            ,DT_Created
-                            ,NM_User_Inclusion
-                            ,DT_Change
-                       FROM dbo.Task
+               sql: @"SELECT ID_Task           = Task.ID_Task
+                            ,Description_Task  = Task.Description_Task
+                            ,DT_Created        = Task.DT_Created
+                            ,NM_User_Inclusion = User_System.NM_User
+                            ,DT_Change         = Task.DT_Change
+                       FROM dbo.Task WITH (NOLOCK)
+                       INNER JOIN dbo.User_System WITH (NOLOCK)
+                       ON User_System.ID_User = Task.ID_User
                        WHERE ID_Task = @ID_Task",
                commandType: CommandType.Text,
                param: parameters

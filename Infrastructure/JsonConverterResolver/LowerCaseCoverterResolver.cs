@@ -1,12 +1,10 @@
 using Newtonsoft.Json.Serialization;
 
-namespace TaskManager.Infrastructure.JsonConverterResolver
+namespace TaskManager.Infrastructure.JsonConverterResolver;
+public class LowerCaseCoverterResolver : DefaultContractResolver
 {
-    public class LowerCaseCoverterResolver : DefaultContractResolver
+    protected override string ResolvePropertyName(string propertyName)
     {
-        protected override string ResolvePropertyName(string propertyName)
-        {
-            return propertyName.ToLower();
-        }
+        return propertyName.ToLower();
     }
 }
