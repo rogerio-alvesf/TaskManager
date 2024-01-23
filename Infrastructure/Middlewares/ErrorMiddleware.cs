@@ -29,15 +29,22 @@ public class ErrorMiddleware
 
         HttpStatusCode statusCode;
 
-        if (ex.GetType() == typeof(DBConcurrencyException))
+        var typeException = ex.GetType();
+
+        if (typeException == typeof(DBConcurrencyException))
         {
             statusCode = HttpStatusCode.BadRequest;
-            requestError = new RequestError(statusCode.ToString(), "Sorry, an error occurred while running");
+            requestError = new RequestError(statusCode.ToString(), ex.Message);
         }
-        else if (ex.GetType() == typeof(NotFoundException))
+        else if (typeException == typeof(NotFoundException))
         {
             statusCode = HttpStatusCode.NotFound;
-            requestError = new RequestError(statusCode.ToString(), "Couldn't find");
+            requestError = new RequestError(statusCode.ToString(), ex.Message);
+        }
+        else if (typeException == typeof(ConflictException))
+        {
+            statusCode = HttpStatusCode.Conflict;
+            requestError = new RequestError(statusCode.ToString(), ex.Message);
         }
         else
         {

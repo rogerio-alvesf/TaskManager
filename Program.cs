@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using TaskManager.Infrastructure.JsonConverterResolver;
 using TaskManager.Config;
 using TaskManager.Infrastructure.Middlewares;
+using TaskManager.Infrastructure.EncryptService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,15 @@ builder.Services.AddControllers();
 // Saiba mais sobre a configuração do Swagger/OpenAPI em https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<ITaskService, TaskService>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IEncryptService, EncryptService>();
+builder.Services.AddScoped<IDatabase, Database>();
 
 builder.Services.AddControllers()
                 .AddNewtonsoftJson(options =>

@@ -33,18 +33,38 @@ public class UserRepository : IUserRepository
         parametros.Add("@Password_User", _encryptService.EncryptData(input.Password_User));
 
         await connection.ExecuteAsync(
-            sql: @"INSERT INTO dbo.User(NM_User
-                                           ,Email_User
-                                           ,DT_Birth
-                                           ,User_Gender
-                                           ,Password_User)
+            sql: @"INSERT INTO dbo.User_System(NM_User
+                                       ,Email_User
+                                       ,DT_Birth
+                                       ,User_Gender
+                                       ,Password_User)
                        VALUES(@NM_User
                              ,@Email_User
                              ,@DT_Birth
                              ,@User_Gender
-                             ,@Password_User)",
+                             ,CONVERT(BINARY(64), @Password_User))",
             param: parametros,
             commandType: CommandType.Text
         );
+    }
+
+    public async Task<bool> CheckUserExists(string email, string password)
+    {
+        using var connection = _dataBase.GetConnection();
+
+        DynamicParameters parametros = new DynamicParameters();
+        parametros.Add("@Email_User", email);
+        parametros.Add("@Password_User", _encryptService.EncryptData(password));
+
+        var result = await connection.QueryFirstOrDefaultAsync<bool>(
+            sql: @"SELECT 1
+                   FROM dbo.User_System WITH (NOLOCK)
+                   WHERE Email_User = @Email_User
+                     AND Password_User = @Password_User",
+            param: parametros,
+            commandType: CommandType.Text
+        );
+
+        return result;
     }
 }

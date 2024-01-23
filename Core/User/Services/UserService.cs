@@ -15,6 +15,9 @@ public class UserService : IUserService
 
     public async Task RegisterUser(InRegisterUser input)
     {
+        if (await _userRepository.CheckUserExists(input.Email_User, input.Password_User))
+            throw new ConflictException("sorry, something went wrong");
+
         await _userRepository.RegisterUser(input);
     }
 }

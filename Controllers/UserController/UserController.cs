@@ -11,16 +11,14 @@ namespace TaskManager.Controllers;
 [Produces("application/json")]
 public class UserController : ControllerBase
 {
+    private readonly IUserService _userService;
+    public UserController(IUserService userService) => _userService = userService;
 
-    public UserController(
-    )
+    [HttpPost]
+    [ProducesResponseType(200)]
+    public async Task<IActionResult> RegisterUser([FromBody] InRegisterUser input)
     {
-    }
-
-    [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<OutTask>), 200)]
-    public async Task<IActionResult> ConsultAllTasks()
-    {
+        await _userService.RegisterUser(input);
         return Ok();
     }
 }
