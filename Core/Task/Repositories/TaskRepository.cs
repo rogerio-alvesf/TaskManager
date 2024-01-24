@@ -18,15 +18,15 @@ namespace TaskManager.Core.Repositories
 
             DynamicParameters parametros = new DynamicParameters();
             parametros.Add("@Description_Task", input.Description_Task);
-            parametros.Add("@NM_User_Inclusion", input.NM_User_Inclusion);
+            parametros.Add("@ID_User", input.ID_User);
 
             await connection.ExecuteAsync(
-                sql: @"INSERT INTO dbo.Task (Description_Task
-                                          ,DT_Created
-                                          ,NM_User_Inclusion)
-                       VALUES(@Description_Task
-                             ,GetDate()
-                             ,@NM_User_Inclusion)",
+                sql: @"INSERT INTO dbo.Task(ID_User
+                                           ,Description_Task
+                                           ,DT_Created)
+                       VALUES(@ID_User
+                             ,@Description_Task
+                             ,GetDate())",
                 param: parametros,
                 commandType: CommandType.Text
             );

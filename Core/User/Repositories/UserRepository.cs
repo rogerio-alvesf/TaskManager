@@ -2,6 +2,7 @@ using System.Data;
 using Dapper;
 using TaskManager.Config;
 using TaskManager.Core.Interfaces.Repository;
+using TaskManager.Core.Models;
 using TaskManager.Core.Models.Input;
 using TaskManager.Core.Models.Output;
 using TaskManager.Infrastructure.EncryptService;
@@ -19,6 +20,31 @@ public class UserRepository : IUserRepository
     {
         _dataBase = dataBase;
         _encryptService = encryptService;
+    }
+
+    public async Task<OutUser> AuthenticateUser(InAuthenticateUser input)
+    {
+        using var connection = _dataBase.GetConnection();
+
+        DynamicParameters parametros = new DynamicParameters();
+        parametros.Add("@Email_User", input.Email);
+        parametros.Add("@Password_User", _encryptService.EncryptData(input.Password));
+
+        var result = await connection.QueryFirstOrDefaultAsync<OutUser>(
+            sql: @"SELECT ID_User
+                         ,NM_User
+                         ,Email_User
+                         ,DT_Birth
+                         ,User_Gender
+                        ,Avatar_User
+                   FROM dbo.User_System
+                   WHERE Email_User = @Email_User
+                     AND Password_User = CONVERT(BINARY(64), @Password_User)",
+            param: parametros,
+            commandType: CommandType.Text
+        );
+
+        return result;
     }
 
     public async Task RegisterUser(InRegisterUser input)
@@ -48,19 +74,17 @@ public class UserRepository : IUserRepository
         );
     }
 
-    public async Task<bool> CheckUserExists(string email, string password)
+    public async Task<bool> UserExists(string email)
     {
         using var connection = _dataBase.GetConnection();
 
         DynamicParameters parametros = new DynamicParameters();
         parametros.Add("@Email_User", email);
-        parametros.Add("@Password_User", _encryptService.EncryptData(password));
 
         var result = await connection.QueryFirstOrDefaultAsync<bool>(
             sql: @"SELECT 1
                    FROM dbo.User_System WITH (NOLOCK)
-                   WHERE Email_User = @Email_User
-                     AND Password_User = @Password_User",
+                   WHERE Email_User = @Email_User",
             param: parametros,
             commandType: CommandType.Text
         );

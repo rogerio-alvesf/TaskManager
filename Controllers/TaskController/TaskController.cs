@@ -1,11 +1,12 @@
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Core.Interfaces.Service;
 using TaskManager.Core.Models.Input;
 using TaskManager.Core.Models.Output;
 
 namespace TaskManager.Controllers;
-
+[Authorize]
 [ApiController]
 [Route("task")]
 [Produces("application/json")]

@@ -1,5 +1,6 @@
 using TaskManager.Core.Interfaces.Repository;
 using TaskManager.Core.Interfaces.Service;
+using TaskManager.Core.Models;
 using TaskManager.Core.Models.Input;
 using TaskManager.Core.Models.Output;
 
@@ -13,9 +14,22 @@ public class UserService : IUserService
         _userRepository = userRepository;
     }
 
+    public async Task<OutUser> AuthenticateUser(InAuthenticateUser input)
+    {
+        if (!await _userRepository.UserExists(input.Email))
+            throw new UnauthorizedException("Authentication error");
+
+        var user = await _userRepository.AuthenticateUser(input);
+
+        if (user == null)
+            throw new NotFoundException("Authentication error");
+
+        return user;
+    }
+
     public async Task RegisterUser(InRegisterUser input)
     {
-        if (await _userRepository.CheckUserExists(input.Email_User, input.Password_User))
+        if (await _userRepository.UserExists(input.Email_User))
             throw new ConflictException("sorry, something went wrong");
 
         await _userRepository.RegisterUser(input);

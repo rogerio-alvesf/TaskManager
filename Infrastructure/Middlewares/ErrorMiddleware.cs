@@ -46,6 +46,11 @@ public class ErrorMiddleware
             statusCode = HttpStatusCode.Conflict;
             requestError = new RequestError(statusCode.ToString(), ex.Message);
         }
+        else if (typeException == typeof(UnauthorizedException))
+        {
+            statusCode = HttpStatusCode.Unauthorized;
+            requestError = new RequestError(statusCode.ToString(), ex.Message);
+        }
         else
         {
             statusCode = HttpStatusCode.InternalServerError;
