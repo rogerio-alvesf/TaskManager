@@ -23,9 +23,9 @@ public class TaskController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(200)]
-    public IActionResult Add([FromBody] InAddTask input)
+    public async Task<IActionResult> Add([FromBody] InAddTask input)
     {
-        _taskService.AddTask(input);
+        await _taskService.AddTask(input);
         return Ok();
     }
 

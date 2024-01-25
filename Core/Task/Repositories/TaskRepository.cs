@@ -2,6 +2,7 @@ using System.Data;
 using Dapper;
 using TaskManager.Config;
 using TaskManager.Core.Interfaces.Repository;
+using TaskManager.Core.Interfaces.Service;
 using TaskManager.Core.Models.Input;
 using TaskManager.Core.Models.Output;
 
@@ -10,15 +11,25 @@ namespace TaskManager.Core.Repositories
     public class TaskRepository : ITaskRepository
     {
         private readonly IDatabase _dataBase;
-        public TaskRepository(IDatabase dataBase) => _dataBase = dataBase;
+        private readonly IApplicationSessionService _applicationSessionService;
+        public TaskRepository(
+            IDatabase dataBase,
+            IApplicationSessionService applicationSessionService
+        )
+        {
+            _dataBase = dataBase;
+            _applicationSessionService = applicationSessionService;
+        }
 
         public async Task AddTask(InAddTask input)
         {
             using var connection = _dataBase.GetConnection();
 
+            var applicationSession = _applicationSessionService.Obtain();
+
             DynamicParameters parametros = new DynamicParameters();
             parametros.Add("@Description_Task", input.Description_Task);
-            parametros.Add("@ID_User", input.ID_User);
+            parametros.Add("@ID_User", applicationSession.ID_User);
 
             await connection.ExecuteAsync(
                 sql: @"INSERT INTO dbo.Task(ID_User

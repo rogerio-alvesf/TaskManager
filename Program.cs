@@ -12,6 +12,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TaskManager.Infrastructure.Authenticate;
 using Microsoft.OpenApi.Models;
+using TaskManager.Infrastructure;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,9 +58,12 @@ builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+builder.Services.AddScoped<IApplicationSessionService, ApplicationSessionService>();
+
 builder.Services.AddScoped<IEncryptService, EncryptService>();
 builder.Services.AddScoped<IAuthenticateService, AuthenticateService>();
 builder.Services.AddScoped<IDatabase, Database>();
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 var keyValue = builder.Configuration.GetSection("Jwt:SecretKey").Value;
 

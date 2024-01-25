@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNet.Identity;
 using Microsoft.IdentityModel.Tokens;
 using TaskManager.Core.Interfaces.Repository;
 using TaskManager.Core.Models;
@@ -54,12 +55,17 @@ public class AuthenticateService : IAuthenticateService
             new Claim("email", email),
         };
 
+        var identity = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
+
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(claims),
+            Subject = identity,
             Expires = DateTime.UtcNow.AddMinutes(10),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
         };
+
+        var claimsPrincipal = new ClaimsPrincipal(identity);
+        Thread.CurrentPrincipal = claimsPrincipal;
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
