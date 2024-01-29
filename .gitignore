@@ -22,5 +22,6 @@ obj/
 appsettings.json
 bin/**
 obj/**
+publish/**
 
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,visualstudiocode

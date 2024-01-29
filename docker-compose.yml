@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  taskmanager-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - taskmanager-db
+
+  taskmanager-db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: SenhaSuperSegura123!
+      ACCEPT_EULA: Y
+    ports:
+      - "3004:1433"
+    volumes:
+      - ./DbObjects/setup.sql:/docker-entrypoint-initdb.d/setup.sql

@@ -1,5 +1,3 @@
-
-
 using System.Data;
 using Microsoft.Data.SqlClient;
 
@@ -8,31 +6,28 @@ public class Database : IDatabase
 {
   public IDbConnection GetConnection()
   {
-    var builder = new ConfigurationBuilder()
-                      .SetBasePath(Directory.GetCurrentDirectory())
-                      .AddJsonFile("appsettings.json");
+    string connectionString;
 
-    IConfiguration configuration = builder.Build();
+    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+    {
+      var builder = new ConfigurationBuilder()
+                  .SetBasePath(Directory.GetCurrentDirectory())
+                  .AddJsonFile("appsettings.json");
 
-    // Obtém a string de conexão do arquivo de configuração
-    string connectionString = configuration.GetConnectionString("MyDatabaseConnection");
+      IConfiguration configuration = builder.Build();
+
+      connectionString = configuration.GetConnectionString("MyDatabaseConnection");
+    }
+    else
+    {
+      connectionString = $"Server=localhost,3004;Database=MeuBancoDeDados;User Id=taskmanagerdb;Password=SenhaSuperSegura123!;MultipleActiveResultSets=true";
+    }
 
     using (SqlConnection connection = new SqlConnection(connectionString))
     {
-      try
-      {
-        connection.Open();
-        Console.WriteLine("Conexão bem-sucedida!");
-
-        // Aqui você pode realizar outras operações no banco de dados, se necessário.
-
-      }
-      catch (Exception ex)
-      {
-        Console.WriteLine("Erro ao tentar conectar-se ao banco de dados: " + ex.Message);
-      }
+      connection.Open();
     }
-    return new SqlConnection(connectionString);
 
+    return new SqlConnection(connectionString);
   }
 }
