@@ -13,8 +13,10 @@ services:
   taskmanager-db:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-      SA_PASSWORD: SenhaSuperSegura123!
+      SA_PASSWORD: YourStrong@Passw0rd
       ACCEPT_EULA: Y
+      MSSQL_USER: taskmanagerdb   # Adiciona o usuário taskmanagerdb
+      MSSQL_PASSWORD: YourStrong@Passw0rd  # Define a senha para o usuário taskmanagerdb
     ports:
       - "3004:1433"
     volumes:

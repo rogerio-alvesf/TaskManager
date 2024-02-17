@@ -20,7 +20,7 @@ public class Database : IDatabase
     }
     else
     {
-      connectionString = $"Server=localhost,3004;Database=MeuBancoDeDados;User Id=taskmanagerdb;Password=SenhaSuperSegura123!;MultipleActiveResultSets=true";
+      connectionString = $"Server=localhost,3004;Database=TaskManager;User Id=taskmanagerdb;Password=YourStrong@Passw0rd;MultipleActiveResultSets=true";
     }
 
     using (SqlConnection connection = new SqlConnection(connectionString))
