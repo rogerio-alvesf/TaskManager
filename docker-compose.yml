@@ -1,6 +1,16 @@
-version: '3.8'
+version: "3.8"
+
+networks:
+  task_manager_networking:
 
 services:
+  mssqldata:
+    image: mcr.microsoft.com/mssql/server:latest
+    container_name: mssqldata
+    entrypoint: /bin/bash
+    networks: 
+      - task_manager_networking
+
   taskmanager-app:
     build:
       context: .
@@ -9,15 +19,26 @@ services:
       - "3000:80"
     depends_on:
       - taskmanager-db
+    networks: 
+      - task_manager_networking
 
   taskmanager-db:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    environment:
-      SA_PASSWORD: YourStrong@Passw0rd
-      ACCEPT_EULA: Y
-      MSSQL_USER: taskmanagerdb   # Adiciona o usuário taskmanagerdb
-      MSSQL_PASSWORD: YourStrong@Passw0rd  # Define a senha para o usuário taskmanagerdb
-    ports:
-      - "3004:1433"
+    image: mcr.microsoft.com/mssql/server:latest
+    container_name: taskmanager-db
     volumes:
-      - ./DbObjects/setup.sql:/docker-entrypoint-initdb.d/setup.sql
+      - /var/opt/mssql
+      # we copy our scripts onto the container
+      - ./:/usr/src/app
+      # bash will be executed from that path, our scripts folder
+    working_dir: /usr/src/app
+    # run the entrypoint.sh that will import the data AND sqlserver
+    command: sh -c 'chmod +x ./entrypoint.sh && ./entrypoint.sh & /opt/mssql/bin/sqlservr;'
+    environment:
+      SA_PASSWORD: YourStrong@Passw0rd  
+      ACCEPT_EULA: Y
+    ports:
+      - "1433:1433"
+    volumes_from:
+      - mssqldata 
+    networks: 
+      - task_manager_networking
