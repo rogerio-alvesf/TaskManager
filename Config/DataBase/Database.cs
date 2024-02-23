@@ -20,7 +20,8 @@ public class Database : IDatabase
     }
     else
     {
-      connectionString = $"Server=taskmanager-db;Database=TaskManager;User Id=sa;Password=YourStrong@Passw0rd;MultipleActiveResultSets=true";
+      // connectionString = $"Server=taskmanager-db;Database=TaskManager;User Id=sa;Password=YourStrong@Passw0rd;MultipleActiveResultSets=true";
+      connectionString = $"Server=taskmanager-sql;Database=TaskManager;User Id=SA;Password=YourStrong@Passw0rd;MultipleActiveResultSets=true;Trusted_Connection=False;Encrypt=False;";
     }
 
     using (SqlConnection connection = new SqlConnection(connectionString))
