@@ -5,6 +5,11 @@
       driver: bridge
 
   services:
+    mssqldata:
+      image: mcr.microsoft.com/mssql/server:latest
+      networks:
+        - task_manager_networking
+
     taskmanager-api:
       container_name: taskmanager-api
       build:
@@ -20,12 +25,19 @@
     taskmanager-sql:
       image: mcr.microsoft.com/mssql/server:latest
       container_name: taskmanager-sql
+      hostname: taskmanagersql
+      ports:
+        - "3004:1433"
       volumes:
-        - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql
+        - /var/opt/mssql
+        - ./:/usr/src/app
+      working_dir: /usr/src/app
+      command: sh -c ' chmod +x ./entrypoint.sh; ./entrypoint.sh & /opt/mssql/bin/sqlservr;'
       environment:
         SA_PASSWORD: YourStrong@Passw0rd
         ACCEPT_EULA: Y
-      ports:
-        - "3004:1433"
+        DATABASE_NAME: TaskManager
+      volumes_from:
+        - mssqldata
       networks: 
         - task_manager_networking
