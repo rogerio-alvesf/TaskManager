@@ -1,4 +1,4 @@
-# Estágio 1: Construir a aplicação ASP.NET
+# Stage 1: Build the ASP.NET application
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY TaskManager.csproj .
@@ -8,7 +8,7 @@ RUN dotnet dev-certs https --clean
 RUN dotnet dev-certs https --trust
 RUN dotnet publish -c release -o /app
 
-# Estágio 2: Imagem final para a aplicação ASP.NET
+# Stage 2: Final image for the ASP.NET application
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=build /app .

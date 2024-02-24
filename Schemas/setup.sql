@@ -1,17 +1,8 @@
-USE master;
-GO
-
 CREATE DATABASE TaskManager COLLATE Latin1_General_100_CI_AS_SC_UTF8;
 GO
 
 USE TaskManager;
 GO
-
-CREATE LOGIN taskmanagerdb WITH PASSWORD = 'SenhaSuperSegura123!';
-CREATE USER taskmanagerdb FOR LOGIN taskmanagerdb;
-ALTER ROLE db_owner ADD MEMBER taskmanagerdb;
-GO
-
 CREATE TABLE dbo.User_System (ID_User INTEGER IDENTITY(1000,500) PRIMARY KEY
                               ,NM_User VARCHAR(45) COLLATE Latin1_General_100_CI_AS_SC_UTF8 NOT NULL
                               ,Email_User VARCHAR(80) COLLATE Latin1_General_100_CI_AS_SC_UTF8 NOT NULL
