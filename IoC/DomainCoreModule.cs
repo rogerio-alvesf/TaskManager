@@ -6,6 +6,8 @@ using TaskManager.Infrastructure.EncryptService;
 using TaskManager.Infrastructure.Authenticate;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using TaskManager.Config;
+using TaskManager.Infrastructure.Validators;
+using TaskManager.Infrastructure.Validators.Intefaces;
 
 namespace TaskManager
 {
@@ -26,6 +28,7 @@ namespace TaskManager
             services.AddScoped<IDatabase, Database>();
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IBase64ValidatorService, Base64ValidatorService>();
         }
     }
 }

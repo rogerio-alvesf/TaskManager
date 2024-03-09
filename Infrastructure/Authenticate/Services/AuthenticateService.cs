@@ -39,7 +39,6 @@ public class AuthenticateService : IAuthenticateService
 
     public string GenerateToken(int id, string email)
     {
-
         var tokenHandler = new JwtSecurityTokenHandler();
 
         var keyValue = _configuration.GetSection("Jwt:SecretKey").Value;

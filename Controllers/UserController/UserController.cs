@@ -7,7 +7,7 @@ using TaskManager.Infrastructure.Authenticate;
 using TaskManager.Infrastructure.Token;
 
 namespace TaskManager.Controllers;
-[AllowAnonymous]
+[Authorize]
 [ApiController]
 [Route("user")]
 [Produces("application/json")]
@@ -24,6 +24,7 @@ public class UserController : ControllerBase
         _authenticateService = authenticateService;
     }
 
+    [AllowAnonymous]
     [HttpPost]
     [ProducesResponseType(200)]
     public async Task<IActionResult> RegisterUser([FromBody] InRegisterUser input)
@@ -32,6 +33,7 @@ public class UserController : ControllerBase
         return Ok();
     }
 
+    [AllowAnonymous]
     [HttpPost("authenticate")]
     [ProducesResponseType(typeof(OutTokenUser), 200)]
     public async Task<IActionResult> AuthenticateUser([FromBody] InAuthenticateUser input)
@@ -44,5 +46,13 @@ public class UserController : ControllerBase
         var result = new OutTokenUser(token);
 
         return Ok(result);
+    }
+    
+    [HttpPut("profile-picture")]
+    public async Task<IActionResult> UpdateProfilePicture([FromBody] string picture_user)
+    {
+        await _userService.UpdateProfilePicture(picture_user);
+
+        return Ok();
     }
 }

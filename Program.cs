@@ -9,16 +9,13 @@ using TaskManager;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adiciona serviços ao contêiner.
 builder.Services.AddControllers();
 
 builder.Services.AddCors();
-
-// Saiba mais sobre a configuração do Swagger/OpenAPI em https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
     {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "JWT AuthAuthentication", Version = "v1" });
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Task Manager API", Version = "v1" });
         c.AddSecurityDefinition("Bearer", 
             new OpenApiSecurityScheme()
             {
@@ -50,7 +47,7 @@ builder.Services.AddSwaggerGen(c =>
 var keyValue = builder.Configuration.GetSection("Jwt:SecretKey").Value;
 
 if (keyValue == null)
-    throw new Exception("Jwt:SecretKey não encontrada");
+    throw new UnauthorizedException("Jwt:SecretKey not found");
 
 var key = Encoding.ASCII.GetBytes(keyValue);
 
@@ -86,7 +83,6 @@ DependencyInjectionConfig.Configure(builder.Services);
 
 var app = builder.Build();
 
-// Configura o pipeline de solicitações HTTP.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

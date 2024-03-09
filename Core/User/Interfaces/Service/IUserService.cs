@@ -7,4 +7,5 @@ public interface IUserService
 {
     Task<OutUser> AuthenticateUser(InAuthenticateUser input);
     Task RegisterUser(InRegisterUser input);
+    Task UpdateProfilePicture(string picture_user);
 }
