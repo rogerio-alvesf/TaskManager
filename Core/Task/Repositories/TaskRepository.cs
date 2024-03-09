@@ -27,9 +27,9 @@ namespace TaskManager.Core.Repositories
 
             var applicationSession = _applicationSessionService.Obtain();
 
-            DynamicParameters parametros = new DynamicParameters();
-            parametros.Add("@Description_Task", input.Description_Task);
-            parametros.Add("@ID_User", applicationSession.ID_User);
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@Description_Task", input.Description_Task);
+            parameters.Add("@ID_User", applicationSession.ID_User);
 
             await connection.ExecuteAsync(
                 sql: @"INSERT INTO dbo.Task(ID_User
@@ -38,7 +38,7 @@ namespace TaskManager.Core.Repositories
                        VALUES(@ID_User
                              ,@Description_Task
                              ,GetDate())",
-                param: parametros,
+                param: parameters,
                 commandType: CommandType.Text
             );
         }
@@ -51,7 +51,6 @@ namespace TaskManager.Core.Repositories
                sql: @"SELECT ID_Task           = Task.ID_Task
                             ,Description_Task  = Task.Description_Task
                             ,DT_Created        = Task.DT_Created
-                            ,NM_User_Inclusion = User_System.NM_User
                             ,DT_Change         = Task.DT_Change
                        FROM dbo.Task WITH (NOLOCK)
                        INNER JOIN dbo.User_System WITH (NOLOCK)
@@ -62,7 +61,7 @@ namespace TaskManager.Core.Repositories
             return result;
         }
 
-        public async Task<OutTask> ConsultTaskById(int id_task)
+        public async Task<OutTask?> ConsultTaskById(int id_task)
         {
             using var connection = _dataBase.GetConnection();
 
@@ -118,6 +117,26 @@ namespace TaskManager.Core.Repositories
               commandType: CommandType.Text,
               param: parameters
           );
+        }
+
+        public async Task<bool> IsTaskOwner(int id_task)
+        {
+            using var connection = _dataBase.GetConnection();
+
+            var applicationSession = _applicationSessionService.Obtain();
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@ID_Task", id_task);
+            parameters.Add("@ID_User", applicationSession.ID_User);
+
+            return await connection.QueryFirstOrDefaultAsync<bool>(
+                sql: @"SELECT 1
+                       FROM dbo.Task
+                       WHERE ID_Task = @ID_Task
+                         AND ID_User = @ID_User",
+                commandType: CommandType.Text,
+                param: parameters
+            );
         }
     }
 }

@@ -54,7 +54,7 @@ public class UserRepository : IUserRepository
         DynamicParameters parametros = new DynamicParameters();
         parametros.Add("@NM_User", input.NM_User);
         parametros.Add("@Email_User", input.Email_User);
-        parametros.Add("@DT_Birth", input.DT_Birth);
+        parametros.Add("@DT_Birth", input.DT_Birth, DbType.DateTime, size: 8);
         parametros.Add("@User_Gender", input.User_Gender);
         parametros.Add("@Password_User", _encryptService.EncryptData(input.Password_User));
 

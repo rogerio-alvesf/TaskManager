@@ -55,14 +55,14 @@ public class ErrorMiddleware
         {
             statusCode = HttpStatusCode.InternalServerError;
 
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
-            {
+            // if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+            // {
                 requestError = new RequestError(statusCode.ToString(), $"{ex.Message} {ex?.InnerException?.Message}");
-            }
-            else
-            {
-                requestError = new RequestError(statusCode.ToString(), "An internal server error has ocurred");
-            }
+            // }
+            // else
+            // {
+            //     requestError = new RequestError(statusCode.ToString(), "An internal server error has ocurred");
+            // }
         }
 
         var result = JsonConvert.SerializeObject(requestError);
@@ -70,8 +70,8 @@ public class ErrorMiddleware
         context.Response.ContentType = "application/json";
         return context.Response.WriteAsync(result);
     }
-
 }
+
 public static class ErrorMiddlewareExtensions
 {
     public static IApplicationBuilder UseErrorMiddleware(this IApplicationBuilder builder)

@@ -1,18 +1,31 @@
 using TaskManager.Core.Interfaces.Repository;
 using TaskManager.Core.Interfaces.Service;
-using TaskManager.Config;
-using TaskManager.Core.Services;
 using TaskManager.Core.Repositories;
+using TaskManager.Core.Services;
 using TaskManager.Infrastructure.EncryptService;
+using TaskManager.Infrastructure.Authenticate;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using TaskManager.Config;
 
-namespace TaskManager;
-public static class DomainCoreModule
+namespace TaskManager
 {
-    public static void AddDomain(this IServiceCollection service)
+    public static class DependencyInjectionConfig
     {
-        service.AddScoped<ITaskRepository, TaskRepository>();
-        service.AddScoped<IEncryptService, EncryptService>();
-        service.AddScoped<ITaskService, TaskService>();
-        service.AddScoped<IDatabase, Database>();
+        public static void Configure(IServiceCollection services)
+        {
+            services.AddScoped<ITaskRepository, TaskRepository>();
+            services.AddScoped<ITaskService, TaskService>();
+
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserService, UserService>();
+
+            services.AddScoped<IApplicationSessionService, ApplicationSessionService>();
+
+            services.AddScoped<IEncryptService, EncryptService>();
+            services.AddScoped<IAuthenticateService, AuthenticateService>();
+            services.AddScoped<IDatabase, Database>();
+
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        }
     }
 }
