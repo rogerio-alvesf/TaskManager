@@ -12,7 +12,6 @@ public class UserService : IUserService
     private readonly ISmtpService _smtpService;
     private readonly IUserRepository _userRepository;
     private readonly IBase64ValidatorService _base64ValidatorService;
-    private readonly IApplicationSessionService _applicationSessionService;
 
     public UserService(
         ISmtpService smtpService,
@@ -24,7 +23,6 @@ public class UserService : IUserService
         _smtpService = smtpService;
         _userRepository = userRepository;
         _base64ValidatorService = base64ValidatorService;
-        _applicationSessionService = applicationSessionService;
     }
 
     public async Task<OutUser> AuthenticateUser(InAuthenticateUser input)
@@ -56,11 +54,12 @@ public class UserService : IUserService
         await _userRepository.UpdateProfilePicture(picture_user);
     }
 
-    public string SendPasswordResetEmail()
+    public async Task<string> SendPasswordResetEmail(string email_user)
     {
-        var applicationSession = _applicationSessionService.Obtain();
+        if(!await _userRepository.UserExists(email_user))
+            throw new BadHttpRequestException("Invalid email");
 
-        string subject = "Reset y password ";
+        string subject = "Reset your password ";
         string body = @"
                         <!DOCTYPE html>
                         <html lang=""en"">
@@ -119,6 +118,11 @@ public class UserService : IUserService
                         </html>
                     ";
         
-        return _smtpService.SendEmail(applicationSession.Email_User, subject, body);
+        return _smtpService.SendEmail(email_user, subject, body);
     }
+
+    public async Task UpdateUser(InUpdateUser input)
+    {
+        await _userRepository.UpdateUser(input);
+    } 
 }

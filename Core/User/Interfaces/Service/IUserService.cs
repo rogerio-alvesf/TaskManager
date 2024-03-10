@@ -8,5 +8,6 @@ public interface IUserService
     Task<OutUser> AuthenticateUser(InAuthenticateUser input);
     Task RegisterUser(InRegisterUser input);
     Task UpdateProfilePicture(string picture_user);
-    string SendPasswordResetEmail();
+    Task<string> SendPasswordResetEmail(string email_user);
+    Task UpdateUser(InUpdateUser input);
 }

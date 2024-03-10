@@ -9,4 +9,5 @@ public interface IUserRepository
     Task<bool> UserExists(string email);
     Task RegisterUser(InRegisterUser input);
     Task UpdateProfilePicture(string picture_user);
+    Task UpdateUser(InUpdateUser input);
 }

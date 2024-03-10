@@ -115,4 +115,29 @@ public class UserRepository : IUserRepository
             commandType: CommandType.Text
         );
     }
+
+    public async Task UpdateUser(InUpdateUser input)
+    {
+        using var connection = _dataBase.GetConnection();
+
+        var applicationSession = _applicationSessionService.Obtain();
+
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@ID_User", applicationSession.ID_User);
+        parameters.Add("@NM_User", input.NM_User);
+        parameters.Add("@Email_User", input.Email_User);
+        parameters.Add("@DT_Birth", input.DT_Birth, DbType.DateTime, size: 8);
+        parameters.Add("@User_Gender", input.User_Gender);
+
+        await connection.ExecuteAsync(
+            sql: @"UPDATE dbo.User_System
+                   SET NM_User     = @NM_User
+                      ,Email_User  = @Email_User
+                      ,DT_Birth    = @DT_Birth
+                      ,User_Gender = @User_Gender
+                   WHERE ID_User = @ID_User",
+            param: parameters,
+            commandType: CommandType.Text
+        );
+    }
 }

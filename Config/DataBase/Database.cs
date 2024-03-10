@@ -16,7 +16,7 @@ public class Database : IDatabase
 
       IConfiguration configuration = builder.Build();
 
-      connectionString = configuration.GetConnectionString("MyDatabaseConnection");
+      connectionString = configuration.GetConnectionString("MyDatabaseConnection") ?? "";
     }
     else
     {
