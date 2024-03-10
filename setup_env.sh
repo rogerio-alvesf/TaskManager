@@ -26,8 +26,8 @@ fill_env_based_on_provider() {
             ;;
         # Add other email providers here as needed
         * ) 
-            echo "The email provider '$email_provider' is not supported."
-            exit 1
+            echo "The email provider '$email_provider' is not supported. Please provide a valid email address with a supported provider."
+            return 1
             ;;
     esac
 
@@ -63,29 +63,35 @@ main() {
 
         case "$configure_smtp" in
             1 ) 
-                read -p "Enter your email address: " email_address
-                validate_email "$email_address"
-                if [ $? -ne 0 ]; then
-                    continue
-                fi
-                # Extract the email provider from the provided email address
-                email_provider=$(echo "$email_address" | cut -d '@' -f 2 | cut -d '.' -f 1)
-                fill_env_based_on_provider "$email_provider"
+                while true; do
+                    read -p "Enter your email address: " email_address
+                    validate_email "$email_address"
+                    if [ $? -ne 0 ]; then
+                        continue
+                    fi
+
+                    # Extract the email provider from the provided email address
+                    email_provider=$(echo "$email_address" | cut -d '@' -f 2 | cut -d '.' -f 1)
+                    fill_env_based_on_provider "$email_provider"
+                    if [ $? -eq 0 ]; then
+                        break # Exit the loop if email provider is supported
+                    fi
+                done
+
                 read -s -p "Enter your password: " smtp_password
                 echo # Add a new line after password input
 
                 echo "SMTP_USERNAME=$email_address" >> configuration-variables.env
                 echo "SMTP_PASSWORD=$smtp_password" >> configuration-variables.env
                 echo "The information has been saved to the configuration-variables.env file."
-
-                # Wait for 5 seconds before closing the prompt
                 sleep 3
-                break # Exit the loop
+                break # Exit the outer loop
                 ;;
             2 ) 
+                echo "You chose not to configure SMTP credentials. You won't be able to access endpoints that interact with the SMTP protocol."
                 read -n 1 -s -r -p "Press Enter to close the prompt..."
                 echo # Add a new line after pressing Enter
-                break # Exit the loop
+                break # Exit the outer loop
                 ;;
             * ) 
                 echo "Invalid choice. Please enter '1' for yes or '2' for no."
