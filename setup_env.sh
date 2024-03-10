@@ -6,11 +6,9 @@ fill_env_based_on_provider() {
     case "$email_provider" in
         "gmail" )
             smtp_server="smtp.gmail.com"
-            smtp_port="587"
             ;;
         "outlook" )
             smtp_server="smtp.office365.com"
-            smtp_port="587"
             ;;
         "yahoo" )
             smtp_server="smtp.mail.yahoo.com"
@@ -18,11 +16,9 @@ fill_env_based_on_provider() {
             ;;
         "icloud" )
             smtp_server="smtp.mail.me.com"
-            smtp_port="587"
             ;;
         "aol" )
             smtp_server="smtp.aol.com"
-            smtp_port="587"
             ;;
         # Add other email providers here as needed
         * ) 
@@ -38,7 +34,7 @@ fill_env_based_on_provider() {
     sed -i '/^SMTP_PASSWORD=/d' configuration-variables.env
 
     echo "SMTP_SERVER=$smtp_server" >> configuration-variables.env
-    echo "SMTP_PORT=$smtp_port" >> configuration-variables.env
+    echo "SMTP_PORT=587" >> configuration-variables.env
 }
 
 # Function to validate email address format

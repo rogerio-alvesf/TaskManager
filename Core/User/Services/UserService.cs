@@ -56,7 +56,7 @@ public class UserService : IUserService
         await _userRepository.UpdateProfilePicture(picture_user);
     }
 
-    public async Task<string> SendPasswordResetEmail()
+    public string SendPasswordResetEmail()
     {
         var applicationSession = _applicationSessionService.Obtain();
 
@@ -118,7 +118,7 @@ public class UserService : IUserService
                         </body>
                         </html>
                     ";
-
+        
         return _smtpService.SendEmail(applicationSession.Email_User, subject, body);
     }
 }

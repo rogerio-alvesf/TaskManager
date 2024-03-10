@@ -59,8 +59,8 @@ public class UserController : ControllerBase
 
     [HttpPost("send-email-reset-password")]
     [ProducesResponseType(typeof(string),200)]
-    public async Task<IActionResult> SendPasswordResetEmail()
+    public IActionResult SendPasswordResetEmail()
     {
-        return Ok(await _userService.SendPasswordResetEmail());
+        return Ok(_userService.SendPasswordResetEmail());
     }
 }

@@ -1,0 +1,338 @@
+_type: export
+__export_format: 4
+__export_date: 2024-03-10T01:33:15.149Z
+__export_source: insomnia.desktop.app:v8.6.1
+resources:
+  - _id: req_d663cdc05ba946bb811e8e11d3ee3737
+    parentId: fld_74c409c9dedb4f84acc0c1f29939f126
+    modified: 1710033328208
+    created: 1706051714321
+    url: "{{ _.base_api_url }}/user"
+    name: RegisterUser
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "nm_user": "user name",
+          "email_user": "user.email@example.com",
+          "dt_birth": "2000-01-11",
+          "user_gender": "M",
+          "password_user": "userpsw"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_9b00154c5de44489952dbef9f721991c
+    authentication: {}
+    metaSortKey: -1706051714321
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_74c409c9dedb4f84acc0c1f29939f126
+    parentId: fld_bec9cffcecd44a1b9d070f4990ccf580
+    modified: 1706051083665
+    created: 1706051083665
+    name: Login
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1706051083665
+    _type: request_group
+  - _id: fld_bec9cffcecd44a1b9d070f4990ccf580
+    parentId: wrk_be32c092ede148efa53dccf90f7e26e3
+    modified: 1710034123628
+    created: 1706051071330
+    name: Open Endpoints
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1706051071330
+    _type: request_group
+  - _id: wrk_be32c092ede148efa53dccf90f7e26e3
+    parentId: null
+    modified: 1706051058171
+    created: 1706050961720
+    name: Task Manager
+    description: ""
+    scope: design
+    _type: workspace
+  - _id: req_57fc73b1c7b94d3e8bf47e2de64612bf
+    parentId: fld_74c409c9dedb4f84acc0c1f29939f126
+    modified: 1710033334879
+    created: 1706541510188
+    url: "{{ _.base_api_url }}/user/authenticate"
+    name: AuthenticateUser
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "email": "user.email@example.com",
+          "password": "userpsw"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_9b00154c5de44489952dbef9f721991c
+    authentication: {}
+    metaSortKey: -1706051403632
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_b2d6125f39024fc088394d4511631969
+    parentId: fld_d5f76dcd32454bc69ce903102c0cdb8d
+    modified: 1710033907453
+    created: 1710015920834
+    url: "{{ _.base_api_url }}/user/profile-picture"
+    name: UpdateProfilePicture
+    description: ""
+    method: PUT
+    body:
+      mimeType: application/json
+      text: '"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"'
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_11ded2ca6de1462ca12ffcb958f7574d
+    authentication: {}
+    metaSortKey: -1710015927156
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_d5f76dcd32454bc69ce903102c0cdb8d
+    parentId: fld_32d200a031584df9863808a924e6b5f2
+    modified: 1710015916933
+    created: 1710015887698
+    name: User
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1706052202153
+    _type: request_group
+  - _id: fld_32d200a031584df9863808a924e6b5f2
+    parentId: wrk_be32c092ede148efa53dccf90f7e26e3
+    modified: 1710034141758
+    created: 1706051028176
+    name: Authenticated Endpoints
+    description: ""
+    environment:
+      GLOBAL_HEADERS:
+        Authorization: Bearer {% response 'body',
+          'req_d663cdc05ba946bb811e8e11d3ee3737', 'b64::JC50b2tlbg==::46b',
+          'never', NaN %}
+    environmentPropertyOrder:
+      "&":
+        - GLOBAL_HEADERS
+      "&~|GLOBAL_HEADERS":
+        - Authorization
+    metaSortKey: -1706051028176
+    _type: request_group
+  - _id: req_a0dac7112e3f477cb67a809f204d1f99
+    parentId: fld_c9a4d8baa35043fd84c6eeac6005f395
+    modified: 1710034097390
+    created: 1710034005616
+    url: "{{ _.base_api_url }}/task"
+    name: UpdateTaskById
+    description: ""
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"description_task" : "update test"
+        }
+    parameters:
+      - name: id_task
+        value: "1"
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_bddf5110399147d5a29777ec1f6b0e29
+    authentication: {}
+    metaSortKey: -1710034005616
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_c9a4d8baa35043fd84c6eeac6005f395
+    parentId: fld_32d200a031584df9863808a924e6b5f2
+    modified: 1706052202053
+    created: 1706052202053
+    name: Task
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1706052202053
+    _type: request_group
+  - _id: req_673548ea4c0549cf99d0a0a665b9e4f2
+    parentId: fld_c9a4d8baa35043fd84c6eeac6005f395
+    modified: 1710034040446
+    created: 1710033931969
+    url: "{{ _.base_api_url }}/task"
+    name: DeleteTaskById
+    description: ""
+    method: DELETE
+    body: {}
+    parameters:
+      - name: id_task
+        value: "1"
+    headers: []
+    authentication: {}
+    metaSortKey: -1710033931969
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_41f093bbcceb4ca782bfea97ec10ebe8
+    parentId: fld_c9a4d8baa35043fd84c6eeac6005f395
+    modified: 1710033957836
+    created: 1710033428773
+    url: "{{ _.base_api_url }}/task"
+    name: ConsultTaskById
+    description: ""
+    method: GET
+    body: {}
+    parameters:
+      - name: id_task
+        value: "1"
+    headers: []
+    authentication: {}
+    metaSortKey: -1710033428773
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_8d009393b7e44993a130161ddd930888
+    parentId: fld_c9a4d8baa35043fd84c6eeac6005f395
+    modified: 1710033607475
+    created: 1706066347785
+    url: "{{ _.base_api_url }}/task"
+    name: AddTask
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"description_task": "Testando pegar dados da sessão"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_4cb7687ef1cb45ee84feae80700c17b3
+    authentication: {}
+    metaSortKey: -1706066347785
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_1cd74b62e26c4f15a89619a801970ce9
+    parentId: fld_c9a4d8baa35043fd84c6eeac6005f395
+    modified: 1706461330420
+    created: 1706052212552
+    url: "{{ _.base_api_url }}/task/all"
+    name: ConsultAllTasks
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1706052212552
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: env_233a67c68f089cf41d25e5985157922052ca0ae7
+    parentId: wrk_be32c092ede148efa53dccf90f7e26e3
+    modified: 1710034311266
+    created: 1706050961729
+    name: Development
+    data:
+      base_api_url: https://localhost:7071
+    dataPropertyOrder:
+      "&":
+        - base_api_url
+    color: null
+    isPrivate: false
+    metaSortKey: 1706050961729
+    _type: environment
+  - _id: jar_233a67c68f089cf41d25e5985157922052ca0ae7
+    parentId: wrk_be32c092ede148efa53dccf90f7e26e3
+    modified: 1706050961733
+    created: 1706050961733
+    name: Default Jar
+    cookies: []
+    _type: cookie_jar
+  - _id: spc_bcc6f19cb9164981a1407608bcabd89a
+    parentId: wrk_be32c092ede148efa53dccf90f7e26e3
+    modified: 1706051058167
+    created: 1706050961725
+    fileName: Task Manager
+    contents: ""
+    contentType: yaml
+    _type: api_spec
+  - _id: env_6c91eb5115734faf820bee702af85750
+    parentId: env_233a67c68f089cf41d25e5985157922052ca0ae7
+    modified: 1710034281185
+    created: 1706461191926
+    name: Prod Container
+    data:
+      base_api_url: http://localhost:3000
+    dataPropertyOrder:
+      "&":
+        - base_api_url
+    color: "#3700ff"
+    isPrivate: false
+    metaSortKey: 1706461191926
+    _type: environment
