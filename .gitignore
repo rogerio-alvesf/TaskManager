@@ -20,6 +20,7 @@ obj/
 .history
 .ionide
 appsettings.json
+configuration-variables.env
 bin/**
 obj/**
 publish/**

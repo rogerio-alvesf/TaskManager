@@ -49,10 +49,18 @@ public class UserController : ControllerBase
     }
     
     [HttpPut("profile-picture")]
+    [ProducesResponseType(200)]
     public async Task<IActionResult> UpdateProfilePicture([FromBody] string picture_user)
     {
         await _userService.UpdateProfilePicture(picture_user);
 
         return Ok();
+    }
+
+    [HttpPost("send-email-reset-password")]
+    [ProducesResponseType(typeof(string),200)]
+    public async Task<IActionResult> SendPasswordResetEmail()
+    {
+        return Ok(await _userService.SendPasswordResetEmail());
     }
 }

@@ -17,12 +17,15 @@ public class ApplicationSessionService : IApplicationSessionService
         var claimsPrincipal = _httpContextAccessor.HttpContext?.User;
 
         var claim = claimsPrincipal?.FindFirst("id")?.Value;
+        var claimEmail = claimsPrincipal?.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
 
         ValidateData(claim);
+        ValidateData(claimEmail);
 
         var id_user = int.Parse(claim ?? "0");
+        var email_user = claimEmail ?? "0";
 
-        return new OutInformationsession(id_user);
+        return new OutInformationsession(id_user, email_user);
     }
 
     private static void ValidateData<T>(T data)

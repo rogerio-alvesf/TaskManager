@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using TaskManager.Config;
 using TaskManager.Infrastructure.Validators;
 using TaskManager.Infrastructure.Validators.Intefaces;
+using TaskManager.Infrastructure.Smtp;
 
 namespace TaskManager
 {
@@ -29,6 +30,7 @@ namespace TaskManager
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IBase64ValidatorService, Base64ValidatorService>();
+            services.AddScoped<ISmtpService, SmtpService>();
         }
     }
 }
