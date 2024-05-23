@@ -11,17 +11,20 @@ public class UserService : IUserService
 {
     private readonly ISmtpService _smtpService;
     private readonly IUserRepository _userRepository;
+    private readonly IImageValidator _imageValidator;
     private readonly IBase64ValidatorService _base64ValidatorService;
 
     public UserService(
         ISmtpService smtpService,
         IUserRepository userRepository,
+        IImageValidator imageValidator,
         IBase64ValidatorService base64ValidatorService,
         IApplicationSessionService applicationSessionService
     )
     {
         _smtpService = smtpService;
         _userRepository = userRepository;
+        _imageValidator = imageValidator;
         _base64ValidatorService = base64ValidatorService;
     }
 
@@ -51,12 +54,17 @@ public class UserService : IUserService
         if (!_base64ValidatorService.IsBase64String(picture_user))
             throw new NotFoundException("Invalid Base64. Make sure the string provided is a valid Base64 code.");
 
+        _imageValidator.ValidateImageUpload(picture_user);
+
         await _userRepository.UpdateProfilePicture(picture_user);
     }
 
     public async Task<string> SendPasswordResetEmail(string email_user)
     {
-        if(!await _userRepository.UserExists(email_user))
+        if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SMTP_USERNAME")))
+            throw new ForbiddenException("SMTP configuration variables not configured");
+
+        if (!await _userRepository.UserExists(email_user))
             throw new BadHttpRequestException("Invalid email");
 
         string subject = "Reset your password ";
@@ -117,12 +125,12 @@ public class UserService : IUserService
                         </body>
                         </html>
                     ";
-        
+
         return _smtpService.SendEmail(email_user, subject, body);
     }
 
     public async Task UpdateUser(InUpdateUser input)
     {
         await _userRepository.UpdateUser(input);
-    } 
+    }
 }

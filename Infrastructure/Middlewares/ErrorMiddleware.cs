@@ -51,13 +51,29 @@ public class ErrorMiddleware
             statusCode = HttpStatusCode.Unauthorized;
             requestError = new RequestError(statusCode.ToString(), ex.Message);
         }
+        else if (typeException == typeof(ForbiddenException))
+        {
+            statusCode = HttpStatusCode.Forbidden;
+            requestError = new RequestError(statusCode.ToString(), ex.Message);
+        }
+        else if (typeException == typeof(UnsupportedMediaTypeException))
+        {
+            statusCode = HttpStatusCode.UnsupportedMediaType;
+            requestError = new RequestError(statusCode.ToString(), ex.Message);
+        }
+        else if (typeException == typeof(UnprocessableEntityException))
+        {
+            statusCode = HttpStatusCode.UnprocessableEntity;
+            requestError = new RequestError(statusCode.ToString(), ex.Message);
+        }
+
         else
         {
             statusCode = HttpStatusCode.InternalServerError;
 
             // if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
             // {
-                requestError = new RequestError(statusCode.ToString(), $"{ex.Message} {ex?.InnerException?.Message}");
+            requestError = new RequestError(statusCode.ToString(), $"{ex.Message} {ex?.InnerException?.Message}");
             // }
             // else
             // {
