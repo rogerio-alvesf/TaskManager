@@ -61,14 +61,11 @@ namespace TaskManager.Core.Repositories
             return result;
         }
 
-        public async Task<OutTask?> ConsultTaskById(int id_task)
+        public async Task<OutTask> ConsultTaskById(int id_task)
         {
             using var connection = _dataBase.GetConnection();
 
-            var parameters = new DynamicParameters();
-            parameters.Add("@ID_Task", id_task);
-
-            var result = await connection.QueryFirstOrDefaultAsync<OutTask>(
+            return await connection.QueryFirstAsync<OutTask>(
                sql: @"SELECT ID_Task           = Task.ID_Task
                             ,Description_Task  = Task.Description_Task
                             ,DT_Created        = Task.DT_Created
@@ -79,10 +76,8 @@ namespace TaskManager.Core.Repositories
                        ON User_System.ID_User = Task.ID_User
                        WHERE ID_Task = @ID_Task",
                commandType: CommandType.Text,
-               param: parameters
+               param: new { id_task }
            );
-
-            return result;
         }
 
         public async Task DeleteTaskById(int id_task)
@@ -136,6 +131,19 @@ namespace TaskManager.Core.Repositories
                          AND ID_User = @ID_User",
                 commandType: CommandType.Text,
                 param: parameters
+            );
+        }
+
+        public async Task<bool> IsExistsTask(int id_task)
+        {
+            using var connection = _dataBase.GetConnection();
+
+            return await connection.QueryFirstOrDefaultAsync<bool>(
+                sql: @"SELECT 1
+                       FROM dbo.Task
+                       WHERE ID_Task = @ID_Task",
+                commandType: CommandType.Text,
+                param: new { id_task }
             );
         }
     }

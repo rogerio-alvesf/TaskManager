@@ -1,4 +1,3 @@
-using System.Data;
 using System.Net;
 using Newtonsoft.Json;
 using TaskManager.Infrastructure.Validators;
@@ -9,7 +8,8 @@ public class ErrorMiddleware
 {
     private readonly RequestDelegate _requestDelegate;
 
-    public ErrorMiddleware(RequestDelegate requestDelegate) => _requestDelegate = requestDelegate;
+    public ErrorMiddleware(RequestDelegate requestDelegate) 
+        => _requestDelegate = requestDelegate;
 
     public async Task Invoke(HttpContext context)
     {
@@ -25,60 +25,26 @@ public class ErrorMiddleware
 
     private Task HandleExceptionAsync(HttpContext context, Exception ex)
     {
-        RequestError requestError;
+        HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
+        var requestError = new RequestError(statusCode.ToString(), ex.Message);
 
-        HttpStatusCode statusCode;
+        var exceptionResponseType = new Dictionary<string, HttpStatusCode>()
+        {
+            { "DBConcurrencyException", HttpStatusCode.BadRequest },
+            { "NotFoundException", HttpStatusCode.NotFound },
+            { "ConflictException", HttpStatusCode.Conflict },
+            { "UnauthorizedException", HttpStatusCode.Unauthorized },
+            { "ForbiddenException", HttpStatusCode.Forbidden },
+            { "UnsupportedMediaTypeException", HttpStatusCode.UnsupportedMediaType },
+            { "UnprocessableEntityException", HttpStatusCode.UnprocessableEntity }
+        };
 
-        var typeException = ex.GetType();
+        var typeException = ex.GetType().ToString().Replace("System.", "");
 
-        if (typeException == typeof(DBConcurrencyException))
+        if (exceptionResponseType.TryGetValue(typeException, out HttpStatusCode statusCodeEx))
         {
-            statusCode = HttpStatusCode.BadRequest;
-            requestError = new RequestError(statusCode.ToString(), ex.Message);
-        }
-        else if (typeException == typeof(NotFoundException))
-        {
-            statusCode = HttpStatusCode.NotFound;
-            requestError = new RequestError(statusCode.ToString(), ex.Message);
-        }
-        else if (typeException == typeof(ConflictException))
-        {
-            statusCode = HttpStatusCode.Conflict;
-            requestError = new RequestError(statusCode.ToString(), ex.Message);
-        }
-        else if (typeException == typeof(UnauthorizedException))
-        {
-            statusCode = HttpStatusCode.Unauthorized;
-            requestError = new RequestError(statusCode.ToString(), ex.Message);
-        }
-        else if (typeException == typeof(ForbiddenException))
-        {
-            statusCode = HttpStatusCode.Forbidden;
-            requestError = new RequestError(statusCode.ToString(), ex.Message);
-        }
-        else if (typeException == typeof(UnsupportedMediaTypeException))
-        {
-            statusCode = HttpStatusCode.UnsupportedMediaType;
-            requestError = new RequestError(statusCode.ToString(), ex.Message);
-        }
-        else if (typeException == typeof(UnprocessableEntityException))
-        {
-            statusCode = HttpStatusCode.UnprocessableEntity;
-            requestError = new RequestError(statusCode.ToString(), ex.Message);
-        }
-
-        else
-        {
-            statusCode = HttpStatusCode.InternalServerError;
-
-            // if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
-            // {
-            requestError = new RequestError(statusCode.ToString(), $"{ex.Message} {ex?.InnerException?.Message}");
-            // }
-            // else
-            // {
-            //     requestError = new RequestError(statusCode.ToString(), "An internal server error has ocurred");
-            // }
+            statusCode = statusCodeEx;
+            requestError.Errors.TraceId = statusCodeEx.ToString();
         }
 
         var result = JsonConvert.SerializeObject(requestError);
@@ -91,7 +57,5 @@ public class ErrorMiddleware
 public static class ErrorMiddlewareExtensions
 {
     public static IApplicationBuilder UseErrorMiddleware(this IApplicationBuilder builder)
-    {
-        return builder.UseMiddleware<ErrorMiddleware>();
-    }
+        => builder.UseMiddleware<ErrorMiddleware>();
 }

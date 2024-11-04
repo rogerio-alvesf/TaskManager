@@ -26,13 +26,9 @@ namespace TaskManager.Core.Services
 
         public async Task<OutTask> ConsultTaskById(int id_task)
         {
+            await IsExistsTask(id_task);
             await IsTaskOwner(id_task, $"Permission denied to consult task id {id_task}");
-            var task = await _taskRepository.ConsultTaskById(id_task);
-
-            if (task == null)
-                throw new NotFoundException("Unable to find task");
-
-            return task;
+            return await _taskRepository.ConsultTaskById(id_task);
         }
 
         public async Task DeleteTaskById(int id_task)
@@ -59,6 +55,12 @@ namespace TaskManager.Core.Services
         {
             if (!await _taskRepository.IsTaskOwner(id_task))
                 throw new UnauthorizedException(description_exception);
+        }
+
+        private async Task IsExistsTask(int id_task)
+        {
+            if (!await _taskRepository.IsExistsTask(id_task))
+                throw new NotFoundException($"Unable to find task id {id_task}");
         }
     }
 }

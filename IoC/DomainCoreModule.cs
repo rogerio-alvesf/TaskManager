@@ -31,6 +31,8 @@ namespace TaskManager
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IBase64ValidatorService, Base64ValidatorService>();
             services.AddScoped<ISmtpService, SmtpService>();
+
+            services.AddScoped<IImageValidator, ImageValidator>();
         }
     }
 }

@@ -1,37 +1,25 @@
 namespace TaskManager.Infrastructure.Validators;
 
-public class RequestError
+ class RequestError
 {
-    public RequestError()
-    {
-        TraceId = Guid.NewGuid().ToString();
-        Errors = new List<ErrorDetails>();
-    }
+    public string TraceId { get; set; }
+    public ErrorDetails Errors { get; set; }
 
     public RequestError(string logref, string detail)
     {
         TraceId = Guid.NewGuid().ToString();
-        Errors = new List<ErrorDetails>();
-        AddError(logref, detail);
+        Errors = new ErrorDetails(logref, detail);
     }
+}
 
+public class ErrorDetails
+{
+    public string Detail { get; set; }
     public string TraceId { get; set; }
-    public List<ErrorDetails> Errors { get; set; }
 
-    public class ErrorDetails
+    public ErrorDetails(string logref, string detail)
     {
-        public ErrorDetails(string logref, string detail)
-        {
-            TraceId = logref;
-            Detail = detail;    
-        }
-
-        public string Detail { get; set; }
-        public string TraceId { get; set; } 
-    }
-
-    public void AddError(string logref, string detail)
-    {
-        Errors.Add(new ErrorDetails(logref, detail));
+        TraceId = logref;
+        Detail = detail;
     }
 }
