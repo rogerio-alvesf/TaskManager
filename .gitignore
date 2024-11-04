@@ -17,6 +17,7 @@ obj/
 
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
+.vs
 .history
 .ionide
 appsettings.json
